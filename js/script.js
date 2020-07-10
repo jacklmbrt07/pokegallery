@@ -7,23 +7,42 @@ let pokemon, pokemonDetail;
 
 /*----- cached element references -----*/
 const $ulEl = $('.collection');
+const $name = $('#name');
+const $imgEl = $('.modal-content img');
+const $moves = $('#moves');
+const $abilities = $('#abilities');
+const $height = $('#height');
+const $modal = $('.modal');
 
 
 /*----- event listeners -----*/
-$ulEl.on('click', handleClick);
+$ulEl.on('click', 'span', handleClick);
+
 /*----- functions -----*/
+
+//initialize modal
+$modal.modal()
+const instance = M.Modal.getInstance($modal);
+
 function handleClick(event) {
-    console.log(event);
+    getPokemon(event.target.dataset.url, true);
 };
 
 getPokemon();
 
-function getPokemon(event) {
-    $.ajax(baseURL).then(
+function getPokemon(detailURL, isDetail) {
+
+    const url = detailURL || baseURL;
+
+    $.ajax(url)
+    .then(
         function(data){
-            pokemon = data.results;
-            render(); // programatically renders the html
-            console.log(data);
+                if(!isDetail){
+                    pokemon = data.results;
+                    render(); // programatically renders the html
+                } else {
+                    pokemonDetail = data;
+                }
         }, 
         function(error){
             console.log(error);
